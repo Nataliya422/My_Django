@@ -1,16 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    
+{% extends "base.html" %}
+{% block title %}
+Главная страница
+{% endblock title %}
+{% block content %}   
   <h1>{{ title }}</h1>
   <p>{{ text }}</p>
   <hr>
-  {% comment "" %}Условия в шаблонизаторе DJANGO{% endcomment %} 
+  {% comment %}Условия в шаблонизаторе DJANGO{% endcomment %} 
   {% if user_status == "admin" %}
   <p>Здравствуй администратор!</p>
   {% elif user_status == "moderator" %}
@@ -18,5 +14,8 @@
   {% else %}
   <p>Здравствуй смертный!</p>
   {% endif %}
-</body>
-</html>
+
+  {% if user_status in "admin moderator editor" %}
+  <p>У вас есть права на редактирование</p>
+  {% endif %}
+{% endblock content %} 
