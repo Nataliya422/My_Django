@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+  <h1>{{ title }}</h1>
+  <p>{{ text }}</p>
+  <hr>
+  {% comment "" %}Условия в шаблонизаторе DJANGO{% endcomment %} 
+  {% if user_status == "admin" %}
+  <p>Здравствуй администратор!</p>
+  {% elif user_status == "moderator" %}
+  <p>Здравствуй модератор!</p>
+  {% else %}
+  <p>Здравствуй смертный!</p>
+  {% endif %}
+</body>
+</html>
