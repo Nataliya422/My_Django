@@ -3,6 +3,8 @@ from django.urls import path
 from python_blog.views import main
 from django.urls import include
 
+
+
 """"
 str - строки, любые символы кроме слэша '/' (по умолчанию)
 int - положительные целые числа включая 0
