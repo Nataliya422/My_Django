@@ -5,10 +5,9 @@ from python_blog.views import main
 from django.urls import include
 
 
-urlpatterns = [
+urlpatterns = [    
     path('admin/', admin.site.urls),
     path('', main),
-
-# подключаем python_blog.urls
-path('post/', include ('python_blog.urls')),
+    # подключаем python_blog.urls
+    path('post/', include ('python_blog.urls')),
 ]
