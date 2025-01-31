@@ -6,6 +6,17 @@
     <title>Главная страница</title>
 </head>
 <body>
-    
+    {% comment "" %}{% endcomment %} 
+    <h1>{{title}}</h1>
+    <p>{{text}}</p>
+    <hr>
+    {% comment "" %} условия в шаблонизаторе DJANGO {% endcomment %}
+    {% if user_status == "admin" %}
+    <p>Привет, администратор!</p>
+     {% elif user_status == "moderator" %} 
+     <p>Привет, модератор!</p>
+     {% else %}
+     <p>Привет, смертный!</p>
+    {% endif %}
 </body>
 </html>

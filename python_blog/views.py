@@ -14,11 +14,13 @@ def main(request):
     catalog_categories_url = reverse('blog:categories')
     catalog_tags_url = reverse('blog:tags')
 
-    return HttpResponse(f"""
-        <h1>Главная страница</h1>
-        <p><a href="{catalog_categories_url}">Каталог категорий</a></p>
-        <p><a href="{catalog_tags_url}">Каталог тегов</a></p>
-    """)
+    context = {
+        "title": "Главная страница",
+        "text": "Текст главной страницы",
+        "user_status": "admin",
+    }
+
+    return render(request, 'main.html', context)
 
 def catalog_posts(request):
     return HttpResponse("Каталог постов")
@@ -47,10 +49,13 @@ def category_detail(request, category_slug):
     else:
         name = category_slug
         
-    return HttpResponse(f"""
-        <h1>Категория: {name}</h1>
-        <p><a href="{reverse('categories')}">Назад к категориям</a></p>
-    """)
+    context = {
+        "title": f"Категория: {name}",
+        "text": f"Текст страницы категории {name}",
+    }
+    
+    return render(request, 'category_detail.html', context)
+
 
 def catalog_tags(request):
     return HttpResponse("Каталог тегов")
