@@ -28,7 +28,7 @@ def main(request):
         "menu_items": MENU_ITEMS,
     }
 
-    return render(request, 'main.html', context)
+    return render(request, "main.html", context)
 
 def catalog_posts(request):
     return HttpResponse("Каталог постов")
