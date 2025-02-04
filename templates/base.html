@@ -1,4 +1,4 @@
-{% comment "" %} Базовый шаблон для всего проекта {% endcomment %}
+{% comment " Базовый шаблон для всего проекта " %}{% endcomment %}
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -12,7 +12,7 @@
 </head>
 <body>
    <header>
-     {% comment "" %} будем подключать menu_include.html {% endcomment %}
+    {% include "menu_include.html" %}
    </header> 
    <main>
     {% block content %}

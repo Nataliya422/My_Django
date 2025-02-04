@@ -7,7 +7,7 @@ from django.urls import include
 
 urlpatterns = [    
     path('admin/', admin.site.urls),
-    path('', main),
+    path('', main, name='main'),  # Убедитесь, что имя маршрута указывается как строка
     # подключаем python_blog.urls
-    path('posts/', include ('python_blog.urls')),
+    path('posts/', include('python_blog.urls')),
 ]

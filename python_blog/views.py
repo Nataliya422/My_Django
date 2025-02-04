@@ -9,6 +9,13 @@ CATEGORIES = [
     {'slug': 'docker', 'name': 'Docker'},
     {'slug': 'linux', 'name': 'Linux'},
 ]
+
+MENU_ITEMS = [
+    {"title": "Главная", "url_name": "main"},
+    {"title": "Все посты", "url_name": "blog:posts"},
+    {"title": "Категории", "url_name": "blog:categories"},
+    {"title": "Теги", "url_name": "blog:tags"},
+]
 # Create your views here.
 def main(request):
     catalog_categories_url = reverse('blog:categories')
@@ -18,6 +25,7 @@ def main(request):
         "title": "Главная страница",
         "text": "Текст главной страницы",
         "user_status": "admin",
+        "menu_items": MENU_ITEMS,
     }
 
     return render(request, 'main.html', context)
