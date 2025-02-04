@@ -31,14 +31,16 @@ def post_detail(request, post_slug):
 def catalog_categories(request):
     links = []
     for category in CATEGORIES:
-        url = reverse('category_detail', args=[category['slug']])
+        url = reverse('blog:category_detail', args=[category['slug']])
         links.append(f'<p><a href="{url}">{category["name"]}</a></p>')
+
+        context = {
+            "title": "Каталог категорий",
+            "text": "Текст каталога категорий",
+            "categories": CATEGORIES,
+        }
     
-    return HttpResponse(f"""
-        <h1>Каталог категорий</h1>
-        {''.join(links)}
-        <p><a href="{reverse('posts')}">К списку постов</a></p>
-    """)
+    return render(request, "catalog_categories.html", context)
 
 
 def category_detail(request, category_slug):

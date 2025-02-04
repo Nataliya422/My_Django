@@ -9,5 +9,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', main),
     # подключаем python_blog.urls
-    path('post/', include ('python_blog.urls')),
+    path('posts/', include ('python_blog.urls')),
 ]
