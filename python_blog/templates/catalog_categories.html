@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,12 +13,12 @@
     {% comment "" %}цикл шаблонизатора{% endcomment %}
     {% for category in categories %}
 
-    <p> Это категория: {{ category.name }}</p>
-    <p> Слаг: {{ category.slug }}</p>
-    <a href="{% url "blog:category_detail" category.slug % }"> {{ category.name }} </a>
+    <p>Это категория: {{ category.name }}</p>
+    <p>Слаг: {{ category.slug }}</p>
+    {% comment %} А так нужно. Это шаблонный тег URL который найдет маршрут по псевдониму {% endcomment %}
+    <a href="{% url "blog:category_detail" category.slug  %}">{{ category.name }}</a>
     <hr>
     {% endfor %}
-</body>
-</html>
+
 </body>
 </html>

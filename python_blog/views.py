@@ -3,11 +3,11 @@ from django.http import HttpResponse
 from django.urls import reverse
 
 CATEGORIES = [
-    {'slug': 'python', 'name': 'Python'},
-    {'slug': 'django', 'name': 'Django'},
-    {'slug': 'postgresql', 'name': 'PostgreSQL'},
-    {'slug': 'docker', 'name': 'Docker'},
-    {'slug': 'linux', 'name': 'Linux'},
+    {"slug": "python", "name": "Python"},
+    {"slug": "django", "name": "Django"},
+    {"slug": "postgresql", "name": "PostgreSQL"},
+    {"slug": "docker", "name": "Docker"},
+    {"slug": "linux", "name": "Linux"},
 ]
 
 MENU_ITEMS = [
@@ -18,8 +18,8 @@ MENU_ITEMS = [
 ]
 # Create your views here.
 def main(request):
-    catalog_categories_url = reverse('blog:categories')
-    catalog_tags_url = reverse('blog:tags')
+    catalog_categories_url = reverse("blog:categories")
+    catalog_tags_url = reverse("blog:tags")
 
     context = {
         "title": "Главная страница",
@@ -39,7 +39,7 @@ def post_detail(request, post_slug):
 def catalog_categories(request):
     links = []
     for category in CATEGORIES:
-        url = reverse('blog:category_detail', args=[category['slug']])
+        url = reverse("blog:category_detail", args=[category["slug"]])
         links.append(f'<p><a href="{url}">{category["name"]}</a></p>')
 
         context = {
@@ -52,19 +52,19 @@ def catalog_categories(request):
 
 
 def category_detail(request, category_slug):
-    category = [cat for cat in CATEGORIES if cat['slug'] == category_slug][0]
+    category = [cat for cat in CATEGORIES if cat["slug"] == category_slug][0]
     
     if category:
-        name = category['name']
+        name = category["name"]
     else:
         name = category_slug
         
-    context = {
-        "title": f"Категория: {name}",
-        "text": f"Текст страницы категории {name}",
-    }
-    
-    return render(request, 'category_detail.html', context)
+    return HttpResponse(
+        f"""
+        <h1>Категория: {name}</h1>
+        <p><a href="{reverse('blog:categories')}">Назад к категориям</a></p>
+    """
+    )
 
 
 def catalog_tags(request):
