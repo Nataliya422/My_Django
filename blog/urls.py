@@ -7,9 +7,15 @@ from django.urls import include
 from django.conf import settings
 from django.conf.urls.static import static
 
+from . import views
+
+app_name = 'blog'
+
 urlpatterns = [    
     path('admin/', admin.site.urls),
     path('', main, name='main'),  # Убедитесь, что имя маршрута указывается как строка
     # подключаем python_blog.urls
     path('posts/', include('python_blog.urls')),
+    
+    path('about/', views.about, name='about'),  # Новый маршрут для страницы "О проекте"
 ]  + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
