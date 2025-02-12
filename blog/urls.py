@@ -1,7 +1,7 @@
 
 from django.contrib import admin
 from django.urls import path
-from python_blog.views import main
+from python_blog.views import main, about
 from django.urls import include
 
 from django.conf import settings
@@ -9,14 +9,11 @@ from django.conf.urls.static import static
 
 #from python_blog import views  # Импортируем модуль views, чтобы использовать его в urls.py
 
-app_name = 'blog'
-
-urlpatterns = [    
+urlpatterns = [
     path('admin/', admin.site.urls),
-    path("", main, name="main"),  # Убедитесь, что имя маршрута указывается как строка
-    # подключаем python_blog.urls
+    path('about/', about, name="about"),
+    path("", main, name="main"),
+
+    # Подключаем python_blog.urls
     path('posts/', include('python_blog.urls')),
-
-
-   
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
