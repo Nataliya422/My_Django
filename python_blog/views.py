@@ -23,46 +23,44 @@ def main(request):
     return render(request, "main.html", context)
 
 
-def about(request):
-    context = {
-        "title": "О компании",
-        "text": "Мы - команда профессионалов в области веб-разработки",
-    }
-    return render(request, "about.html", context)
-
 
 def catalog_posts(request):
-    posts = Post.objects.all()
-    context = {"title": "Блог", "posts": posts}
-    return render(request, "blog.html", context)
+    return HttpResponse("Каталог постов")
 
 
 def post_detail(request, post_slug):
-    post = Post.objects.get(slug=post_slug)
-    context = {"title": post.title, "post": post}
-    return render(request, "post_detail.html", context)
-
-
-from .models import Post, Category
+    return HttpResponse(f"Страница поста {post_slug}")
 
 
 def catalog_categories(request):
-    categories = Category.objects.all()
-    context = {"categories": categories, "title": "Категории блога"}
+    links = []
+    for category in CATEGORIES:
+        url = reverse("blog:category_detail", args=[category["slug"]])
+        links.append(f'<p><a href="{url}">{category["name"]}</a></p>')
+
+    context = {
+        "title": "Категории",
+        "text": "Текст страницы с категориями",
+        "categories": CATEGORIES,
+    }
     return render(request, "catalog_categories.html", context)
 
 
 def category_detail(request, category_slug):
-    category = Category.objects.get(slug=category_slug)
-    posts = category.posts.all()
-    context = {
-        "category": category,
-        "posts": posts,
-        "title": f"Категория: {category.name}",
-        "active_menu": "categories"  # Добавляем флаг активного меню
-    }
-    return render(request, "category_detail.html", context)
 
+    category = [cat for cat in CATEGORIES if cat["slug"] == category_slug][0]
+
+    if category:
+        name = category["name"]
+    else:
+        name = category_slug
+
+    return HttpResponse(
+        f"""
+        <h1>Категория: {name}</h1>
+        <p><a href="{reverse('blog:categories')}">Назад к категориям</a></p>
+    """
+    )
 
 
 def catalog_tags(request):
