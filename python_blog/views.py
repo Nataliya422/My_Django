@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.urls import reverse
 from .models import Post, Category
+from .blog_data import dataset
 
 CATEGORIES = [
     {"slug": "python", "name": "Python"},
