@@ -7,16 +7,6 @@ from django.contrib.auth import get_user_model
 
 
 class Post(models.Model):
-
-    # Определим статусы для поста. Проверено. Не проверено. Черновик. Опубликовано.
-    STATUS_CHOICES = [
-        ("draft", "Черновик"),
-        ("review", "На проверке"),
-        ("reviewed", "Проверено"),
-        ("published", "Опубликовано"),
-    ]
-
-
     title = models.CharField(max_length=100, unique=True, verbose_name="Заголовок")
     slug = models.SlugField(max_length=250, unique=True, verbose_name="Слаг", blank=True, null=True)
     content = models.TextField(verbose_name="Контент")
@@ -24,9 +14,6 @@ class Post(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
     updated_at = models.DateTimeField(auto_now=True, verbose_name="Дата обновления")
     views = models.PositiveIntegerField(default=0, verbose_name="Просмотры")
-    status = models.CharField(
-        max_length=10, choices=STATUS_CHOICES, default="review", verbose_name="Статус"
-    )
     # категория - внешний ключ
     category = models.ForeignKey(
         "Category",  # Ссылка на модель Category
@@ -37,7 +24,7 @@ class Post(models.Model):
         default=None,  # По умолчанию значение NULL
         verbose_name="Категория",
     )
-    tags = models.ManyToManyField("Tag", related_name="posts", verbose_name="Теги")
+    tags = models.JSONField(null=True, blank=True, default=list, verbose_name="Теги") # default=list - по умолчанию пустой список
 
     def __str__(self):
         return self.title
@@ -53,27 +40,6 @@ class Post(models.Model):
         ordering = ["-created_at"]
         verbose_name = "Пост"
         verbose_name_plural = "Посты"
-
-class Tag(models.Model):
-    name = models.CharField(max_length=200, verbose_name="Название")
-    slug = models.SlugField(max_length=250, unique=True, verbose_name="Слаг")
-
-    def __str__(self):
-        return self.name
-    
-    def get_absolute_url(self):
-        return reverse("blog:tag_detail", args=[self.slug])
-    
-    def save(self, *args, **kwargs):
-        self.slug = slugify(unidecode(self.name))
-        super().save(*args, **kwargs)
-
-    class Meta:
-        verbose_name = "Тег"
-        verbose_name_plural = "Теги"
-        ordering = ["name"]
-    
-
 
 
 class Category(models.Model):
