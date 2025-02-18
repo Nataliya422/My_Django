@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.urls import reverse
 from .models import Post, Category
-from .blog_data import dataset
+from .blod_data import dataset
 
 CATEGORIES = [
     {"slug": "python", "name": "Python"},
@@ -20,6 +20,7 @@ def main(request):
         "title": "Главная страница",
         "text": "Текст главной страницы",
         "user_status": "moderator",
+        "active_page": "main",
     }
     return render(request, "main.html", context)
 
@@ -43,6 +44,7 @@ def catalog_categories(request):
         "title": "Категории",
         "text": "Текст страницы с категориями",
         "categories": CATEGORIES,
+        "active_page": "blog:categories",
     }
     return render(request, "catalog_categories.html", context)
 
