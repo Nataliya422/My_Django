@@ -1,64 +1,93 @@
 from django.db import models
-from django.urls import reverse
+from django.contrib.auth import get_user_model
 from django.utils.text import slugify
 from unidecode import unidecode
-# Функция get_user_model() возвращает модель пользователя, которая используется по умолчанию в проекте.
-from django.contrib.auth import get_user_model
+from django.urls import reverse
+from django.utils import timezone
+
 
 
 class Post(models.Model):
-    title = models.CharField(max_length=100, unique=True, verbose_name="Заголовок")
-    slug = models.SlugField(max_length=250, unique=True, verbose_name="Слаг", blank=True, null=True)
+    """
+    Модель поста
+    """
+    STATUS_CHOICES = [
+        ("draft", "Черновик"),
+        ("review", "На проверке"),
+        ("reviewed", "Проверено"),
+        ("published", "Опубликовано"),
+    ]
+
+    title = models.CharField(max_length=200, unique=True, verbose_name="Заголовок")
+    slug = models.SlugField(max_length=250, unique=True, blank=True, verbose_name="Слаг")
     content = models.TextField(verbose_name="Контент")
-    author = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, verbose_name="Автор", related_name="posts", default=None, null=True)
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
-    updated_at = models.DateTimeField(auto_now=True, verbose_name="Дата обновления")
-    views = models.PositiveIntegerField(default=0, verbose_name="Просмотры")
-    # категория - внешний ключ
-    category = models.ForeignKey(
-        "Category",  # Ссылка на модель Category
-        on_delete=models.SET_NULL,  # При удалении категории, установить значение NULL
-        blank=True,  # Не требуем в формах заполнения
-        null=True,  # Разрешаем значение NULL в базе данных
-        related_name="posts",  # Имя обратной связи
-        default=None,  # По умолчанию значение NULL
-        verbose_name="Категория",
-    )
-    tags = models.JSONField(null=True, blank=True, default=list, verbose_name="Теги") # default=list - по умолчанию пустой список
+    author = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, verbose_name="Автор")
+    data = models.JSONField(null=True, blank=True, default=dict, verbose_name="Дополнительные данные")
+    published_date = models.DateTimeField(auto_now_add=True, verbose_name="Дата публикации")  # Удален default
+    updated_date = models.DateTimeField(auto_now=True, verbose_name="Дата обновления")
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default="draft", verbose_name="Статус")
 
     def __str__(self):
+        """Возвращает строковое представление поста."""
         return self.title
-    
+
     def get_absolute_url(self):
+        """Возвращает абсолютный URL поста по его slug."""
         return reverse("blog:post_detail", args=[self.slug])
-    
+
     def save(self, *args, **kwargs):
-        self.slug = slugify(unidecode(self.title))
+        """Переопределение метода save для автоматической генерации slug."""
+        if not self.slug:
+            self.slug = slugify(self.title)  # Убедитесь, что slugify работает с корректным импортом
         super().save(*args, **kwargs)
-    
+
     class Meta:
-        ordering = ["-created_at"]
+        ordering = ["-published_date"]
         verbose_name = "Пост"
         verbose_name_plural = "Посты"
 
-
-class Category(models.Model):
+class Tag(models.Model):
+    """Модель для тегов."""
     name = models.CharField(max_length=200, verbose_name="Название")
     slug = models.SlugField(max_length=250, unique=True, verbose_name="Слаг")
-    description = models.TextField(
-        blank=True, null=True, default="Без описания", verbose_name="Описание"
-    )
 
     def __str__(self):
+        """Возвращает строковое представление тега."""
         return self.name
-    
+
     def get_absolute_url(self):
-        return reverse("blog:category_detail", args=[self.slug])
-    
+        """Возвращает абсолютный URL тега по его slug."""
+        return reverse("blog:tag_detail", args=[self.slug])
+
     def save(self, *args, **kwargs):
+        """Переопределение метода save для автоматической генерации slug."""
         self.slug = slugify(unidecode(self.name))
         super().save(*args, **kwargs)
-    
+
+    class Meta:
+        verbose_name = "Тег"
+        verbose_name_plural = "Теги"
+        ordering = ["name"]
+
+class Category(models.Model):
+    """Модель для категорий."""
+    name = models.CharField(max_length=200, verbose_name="Название")
+    slug = models.SlugField(max_length=250, unique=True, verbose_name="Слаг")
+    description = models.TextField(blank=True, null=True, default="Без описания", verbose_name="Описание")
+
+    def __str__(self):
+        """Возвращает строковое представление категории."""
+        return self.name
+
+    def get_absolute_url(self):
+        """Возвращает абсолютный URL категории по ее slug."""
+        return reverse("blog:category_detail", args=[self.slug])
+
+    def save(self, *args, **kwargs):
+        """Переопределение метода save для автоматической генерации slug."""
+        self.slug = slugify(unidecode(self.name))
+        super().save(*args, **kwargs)
+
     class Meta:
         verbose_name = "Категория"
         verbose_name_plural = "Категории"
