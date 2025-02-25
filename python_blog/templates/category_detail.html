@@ -1,14 +1,36 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Doc</title>
-</head>
-<body>
-    {% comment "" %}{% endcomment %} 
-    <h1>{{title}}</h1>
-    <p>{{text}}</p>
-</body>
-</html>
+{% extends "base.html" %}
 
+{% block title %}
+{{ category.name }} | Блог
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1><i class="bi bi-folder"></i> {{ category.name }}</h1>
+            <p class="lead">{{ category.description }}</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            {% for post in posts %}
+                {% include 'post_preview_include.html' %}
+            {% empty %}
+                <div class="alert alert-info">
+                    В этой категории пока нет постов
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-12">
+            <a href="{% url 'blog:categories' %}" class="btn btn-outline-primary">
+                <i class="bi bi-arrow-left"></i> Вернуться к категориям
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

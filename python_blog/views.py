@@ -44,19 +44,21 @@ def post_detail(request, post_slug):
     context = {"title": post.title, "post": post}
     return render(request, "post_detail.html", context)
 
+from .models import Post, Category
+
 def catalog_categories(request):
-    categories = Category.objects.all()  # Получаем все категории
+    categories = Category.objects.all()
     context = {"categories": categories, "title": "Категории блога"}
     return render(request, "catalog_categories.html", context)
 
 def category_detail(request, category_slug):
-    category = get_object_or_404(Category, slug=category_slug)  # Получаем категорию по slug
-    posts = category.posts.all()  # Получаем все посты, связанные с этой категорией
+    category = Category.objects.get(slug=category_slug)
+    # Используем related_name="posts" для получения всех постов категории
+    posts = category.posts.all()
     context = {
         "category": category,
         "posts": posts,
         "title": f"Категория: {category.name}",
-        "active_menu": "categories",  # Флаг активного меню
     }
     return render(request, "category_detail.html", context)
 
